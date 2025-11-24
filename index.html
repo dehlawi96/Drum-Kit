@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Drum Kit</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <button class="toggle-btn" id="themeToggle">🌞 Light</button>
+
+  <div class="keys">
+    <div data-key="65" class="key"><kbd>A</kbd><span class="sound">clap</span></div>
+    <div data-key="83" class="key"><kbd>S</kbd><span class="sound">hihat</span></div>
+    <div data-key="68" class="key"><kbd>D</kbd><span class="sound">kick</span></div>
+    <div data-key="70" class="key"><kbd>F</kbd><span class="sound">openhat</span></div>
+    <div data-key="71" class="key"><kbd>G</kbd><span class="sound">boom</span></div>
+    <div data-key="72" class="key"><kbd>H</kbd><span class="sound">ride</span></div>
+    <div data-key="74" class="key"><kbd>J</kbd><span class="sound">snare</span></div>
+    <div data-key="75" class="key"><kbd>K</kbd><span class="sound">tom</span></div>
+    <div data-key="76" class="key"><kbd>L</kbd><span class="sound">tink</span></div>
+  </div>
+
+  <audio src="sounds/clap.mp3" data-key="65"></audio>
+  <audio src="sounds/hihat.mp3" data-key="83"></audio>
+  <audio src="sounds/kick.mp3" data-key="68"></audio>
+  <audio src="sounds/openhat.mp3" data-key="70"></audio>
+  <audio src="sounds/boom.mp3" data-key="71"></audio>
+  <audio src="sounds/ride.mp3" data-key="72"></audio>
+  <audio src="sounds/snare.mp3" data-key="74"></audio>
+  <audio src="sounds/tom.mp3" data-key="75"></audio>
+  <audio src="sounds/tink.mp3" data-key="76"></audio>
+
+  <script>
+    function playSound(keyCode) {
+      const audio = document.querySelector(`audio[data-key="${keyCode}"]`);
+      const key = document.querySelector(`.key[data-key="${keyCode}"]`);
+      if (!audio || !key) return;
+      audio.currentTime = 0;
+      audio.play();
+      key.classList.add('playing');
+      setTimeout(() => key.classList.remove('playing'), 150);
+    }
+
+    window.addEventListener('keydown', e => playSound(e.keyCode));
+
+    document.querySelectorAll('.key').forEach(key => {
+      key.addEventListener('click', () => playSound(key.getAttribute('data-key')));
+    });
+
+    const toggleBtn = document.getElementById('themeToggle');
+    const body = document.body;
+
+    if (localStorage.getItem('theme') === 'dark') {
+      body.classList.add('dark');
+      toggleBtn.textContent = '🌙 Dark';
+    }
+
+    toggleBtn.addEventListener('click', () => {
+      const isDark = body.classList.toggle('dark');
+      toggleBtn.textContent = isDark ? '🌙 Dark' : '🌞 Light';
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    });
+  </script>
+</body>
+</html>
